@@ -1,8 +1,8 @@
-SELECT Name, Phone, MailingAddress, MailingCity, MailingState, MailingCountry, MailingLatitude, MailingLongitude
+SELECT Name, Phone, BillingAddress, BillingCity, BillingState, BillingPostalCode, BillingLatitude, BillingLongitude
 FROM Account 
-WHERE distance(MailingAddress, geolocation(37.775, -122.418), 'mi') < 50 AND Type = 'Clinic'
-ORDER BY distance(MailingAddress, geolocation(37.775, -122.418), 'mi')
-LIMIT 20;
+WHERE distance(BillingAddress, geolocation(37.775, -122.418), 'mi') < 25 AND Type = 'Clinic'
+ORDER BY distance(BillingAddress, geolocation(37.775, -122.418), 'mi')
+LIMIT 5;
 
 --The 1st parameter for distance(1,2,3) will be the clinics' location field.
 --The 2nd parameter for distance(1,2,3) is the point to measure FROM, ie zip code's location field.
