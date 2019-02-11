@@ -1,6 +1,6 @@
 SELECT Name, Phone, MailingAddress, MailingCity, MailingState, MailingCountry, MailingLatitude, MailingLongitude
 FROM Account 
-WHERE distance(MailingAddress, geolocation(37.775, -122.418), 'mi') < 50 
+WHERE distance(MailingAddress, geolocation(37.775, -122.418), 'mi') < 50 AND Type = 'Clinic'
 ORDER BY distance(MailingAddress, geolocation(37.775, -122.418), 'mi')
 LIMIT 20;
 
