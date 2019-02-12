@@ -3,27 +3,34 @@ public with sharing class geolocationApex {
 @AuraEnabled
 public static List<Account> getClinics(String zipName) {
   
-  Zip_Code__c zip = [SELECT Id, Name, Geolocation__Latitude__s, Geolocation__Longitude__s
-                     FROM Zip_Code__c 
-                     WHERE Name = :zipName
-                     LIMIT 1];
+  Zip_Code__c zip = new Zip_Code__c();
+  
+  zip = [SELECT Id, Name, Geolocation__Latitude__s, Geolocation__Longitude__s
+         FROM Zip_Code__c 
+         WHERE Name = :zipName
+         LIMIT 1];
                      
   
-  if (zip.Geolocation__c == null) { 
-                  Zip_Code__c zipGeo = [SELECT Id, Name, Geolocation__c 
-                                        FROM Zip_Code__c 
-                                        WHERE Name > :nullZip 
-                                        ORDER BY Name ASC 
-                                        LIMIT 1];
+  if (zip.Geolocation__Latitude__s == null || zip.Geolocation__Longitude__s == null) { 
+                  zip = [SELECT Id, Name, Geolocation__Latitude__s, Geolocation__Longitude__s
+                         FROM Zip_Code__c 
+                         WHERE Name > :nullZip 
+                         AND Geolocation__Latitude__s != null
+                         AND Geolocation__Longitude__s != null
+                         ORDER BY Name ASC 
+                         LIMIT 1];
   }
   
+  String zipLat = zip.Geolocation__Latitude__s;
+  String zipLong = zip.Geolocation__Longitude__s;
+  
   List<Account> clinics = [SELECT Name, Phone, BillingAddress, BillingCity, BillingState, 
-                               BillingPostalCode, BillingLatitude, BillingLongitude
-                        FROM Account 
-                        WHERE distance(BillingAddress, geolocation(37.775, -122.418), 'mi') < 25 
-                        AND Type = 'Clinic'
-                        ORDER BY distance(BillingAddress, geolocation(37.775, -122.418), 'mi')
-                        LIMIT 5];
+                           BillingPostalCode, BillingLatitude, BillingLongitude
+                           FROM Account 
+                           WHERE distance(BillingAddress, geolocation( :zipLat , :zipLong ), 'mi') < 25
+                           AND Type = 'Clinic'
+                           ORDER BY distance(BillingAddress, geolocation( :zipLat , :zipLong ), 'mi') ASC
+                           LIMIT 5];
   
   return clinics;
   
