@@ -24,6 +24,9 @@ public static List<Account> getClinics(String zipName) {
   String zipLat = zip.Geolocation__Latitude__s;
   String zipLong = zip.Geolocation__Longitude__s;
   
+  // for account SOQL, need to pull in the 'do we owe them' ratio from the Source
+  // the ratio needs to be less than the cap for the Source
+  
   List<Account> clinics = [SELECT Name, Phone, BillingAddress, BillingCity, BillingState, 
                            BillingPostalCode, BillingLatitude, BillingLongitude
                            FROM Account 
