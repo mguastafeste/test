@@ -26,7 +26,6 @@ public static List<Account> getClinics(String zipName) {
                         LIMIT 5];
   
   return clinics;
-
   
 }
 
